@@ -6,7 +6,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   port: 3306,
   username: 'root',
   password: '',
-  database: 'todo-task',
+  database: 'nest-todo',
   entities: [__dirname + '../../**/*.entity.js'],
   synchronize: true,
 };

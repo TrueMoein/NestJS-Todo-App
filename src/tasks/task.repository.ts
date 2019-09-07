@@ -1,11 +1,12 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
+import { queryConfig } from '../config/query.config';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
-  async getTasks(filterDto: GetTaskFilterDto): Promise<Task[]> {
-    const {status, search} = filterDto;
+  async getTasks(filterDto: GetTaskFilterDto): Promise<any> {
+    const { status, search, offset, limit } = filterDto;
 
     const query = this.createQueryBuilder('task');
 
@@ -19,6 +20,9 @@ export class TaskRepository extends Repository<Task> {
         {search: `%${search}%`},
       );
     }
+
+    query.limit(limit || queryConfig.defaultPageSize);
+    query.offset(offset);
 
     return await query.getMany();
   }

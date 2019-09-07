@@ -10,4 +10,10 @@ export class GetTaskFilterDto {
     message: `${[ TaskStatus.IN_PROGRESS, TaskStatus.DONE, TaskStatus.OPEN ]} یکی از این مقادیر را برای جستجو در وضعیت تسک ها وارد نمایيد`,
   })
   status: TaskStatus;
+
+  @IsOptional()
+  limit: number;
+
+  @IsOptional()
+  offset: number;
 }
