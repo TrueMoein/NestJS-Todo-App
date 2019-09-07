@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -45,5 +45,10 @@ export class TasksController {
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
   ): Promise<Task> {
     return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
+  }
+
+  @Delete(':id')
+  deleteTask(@Param('id') id: number): Promise<string> {
+    return this.tasksService.deleteTask(id);
   }
 }
