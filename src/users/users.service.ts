@@ -4,11 +4,13 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { Task } from 'src/tasks/task.entity';
 import { CreateUserDto } from './dto/create-user-dto';
+import { MailerService } from '@nest-modules/mailer';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly mailerService: MailerService,
   ) {}
 
   async getUsers(): Promise<User[]> {
@@ -35,6 +37,17 @@ export class UsersService {
       const newUser = new User(name, email, phone);
 
       await newUser.save();
+
+      // this.mailerService.sendMail({
+      //   to: email,
+      //   subject: `Wellcome ${name} ✔`,
+      //   template: 'email-verification',
+      //   context: {
+      //     name,
+      //     email,
+      //     phone,
+      //   },
+      // });
 
       return newUser;
     }
