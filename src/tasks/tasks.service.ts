@@ -19,13 +19,13 @@ export class TasksService {
     const query = this.taskRepository.createQueryBuilder('task');
 
     if (status) {
-      query.andWhere('task.status = :status', {status});
+      query.andWhere('task.status = :status', { status });
     }
 
     if (search) {
       query.andWhere(
         'task.title LIKE :search OR task.description LIKE :search',
-        {search: `%${search}%`},
+        { search: `%${search}%` },
       );
     }
 
@@ -54,7 +54,10 @@ export class TasksService {
     return task;
   }
 
-  async updateTaskStatus(id: number, updateTaskStatusDto: UpdateTaskStatusDto): Promise<Task> {
+  async updateTaskStatus(
+    id: number,
+    updateTaskStatusDto: UpdateTaskStatusDto,
+  ): Promise<Task> {
     const { status } = updateTaskStatusDto;
     const task: Task = await this.getTasksById(id);
 
