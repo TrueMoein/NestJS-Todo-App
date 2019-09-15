@@ -6,7 +6,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
   Query,
   UsePipes,
   ValidationPipe,

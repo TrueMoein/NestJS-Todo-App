@@ -1,19 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { Repository } from 'typeorm';
+import { queryConfig } from '../config/query.config';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(TaskRepository) private taskRepository: TaskRepository,
+    @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
   async getTasks(filterDto: GetTaskFilterDto): Promise<Task[]> {
-    return this.taskRepository.getTasks(filterDto);
+    const { status, search, offset, limit } = filterDto;
+
+    const query = this.taskRepository.createQueryBuilder('task');
+
+    if (status) {
+      query.andWhere('task.status = :status', {status});
+    }
+
+    if (search) {
+      query.andWhere(
+        'task.title LIKE :search OR task.description LIKE :search',
+        {search: `%${search}%`},
+      );
+    }
+
+    query.limit(limit || queryConfig.defaultPageSize);
+    query.offset(offset);
+
+    return await query.getMany();
   }
 
   async getTasksById(id: number): Promise<Task> {
