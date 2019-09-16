@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Task } from '../tasks/task.entity';
 import { Verification } from './verification';
+import { MailerService } from '@nest-modules/mailer';
+import { Injectable } from '@nestjs/common';
 
 @Entity()
 export class User extends BaseEntity {
@@ -33,9 +35,4 @@ export class User extends BaseEntity {
 
   @OneToMany(type => Task, task => task.user)
   tasks: Task[];
-
-  @AfterInsert()
-  sendVerifications() {
-    Verification(this.email, this.phone);
-  }
 }

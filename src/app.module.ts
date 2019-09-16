@@ -13,12 +13,14 @@ import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
         host: 'smtp.gmail.com',
         port: '587',
         auth: {
-          user: '3moein@gmail.com',
-          pass: 'testtesttest!fake!fake!fake!fuck!',
+          user: 'nest.todo@gmail.com',
+          pass: 'nest-todo-email123',
         },
+        secure: false,
+        debug: true,
       },
       defaults: {
-        from: 'truemoein@gmail.com',
+        from: 'nest.todo@gmail.com',
       },
       template: {
         dir: __dirname + '/../src/mail-templates',

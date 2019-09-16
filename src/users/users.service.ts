@@ -1,8 +1,7 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { Task } from 'src/tasks/task.entity';
 import { CreateUserDto } from './dto/create-user-dto';
 import { MailerService } from '@nest-modules/mailer';
 
@@ -27,29 +26,25 @@ export class UsersService {
       where: [{ email }, { phone }],
     });
 
-    if (existUser) {
-      throw new ConflictException(
-        `user with email ${existUser.email} or phone number ${
-          existUser.phone
-        } was exist.`,
-      );
-    } else {
+    if (!existUser) {
       const newUser = new User(name, email, phone);
 
       await newUser.save();
 
-      // this.mailerService.sendMail({
-      //   to: email,
-      //   subject: `Wellcome ${name} ✔`,
-      //   template: 'email-verification',
-      //   context: {
-      //     name,
-      //     email,
-      //     phone,
-      //   },
-      // });
+      this.mailerService.sendMail({
+        to: email,
+        subject: `Wellcome ${name} ✔`,
+        template: 'email-verification',
+        context: {
+          name,
+          email,
+          phone,
+        },
+      });
 
       return newUser;
+    } else {
+      throw new BadRequestException('A user with this information are exists!');
     }
   }
 
